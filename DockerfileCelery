@@ -1,0 +1,11 @@
+FROM amd64/python:3.12
+
+COPY requirements_celery.txt /celery/requirements.txt
+RUN pip install --no-cache-dir --upgrade -r /celery/requirements.txt
+
+COPY ./celery /celery
+WORKDIR /celery
+
+RUN sh install_chrome.sh
+
+ENTRYPOINT celery -A tasks worker --concurrency=1 --loglevel=info

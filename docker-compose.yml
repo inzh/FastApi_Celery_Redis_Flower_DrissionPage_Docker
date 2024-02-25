@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  fastapi:
+    build:
+      context: .
+      dockerfile: DockerfileFastApi
+    environment:
+      CELERY_BROKER_URL: redis://redis_server:6379
+      C_FORCE_ROOT: 'true'
+    volumes:
+      - ./result/fastapi_logs:/app/logs
+    ports:
+      - '5050:80'
+    depends_on:
+      - redis_server
+  worker:
+    build:
+      context: .
+      dockerfile: DockerfileCelery
+    environment:
+      CELERY_BROKER_URL: redis://redis_server:6379
+      C_FORCE_ROOT: 'true'
+    volumes:
+      - ./result/task_result:/celery/result
+    depends_on:
+      - redis_server
+  redis_server:
+    image: redis
+
+  flower:
+    image: mher/flower
+    command: ['celery', '--broker=redis://redis_server:6379', 'flower', '--port=5555']
+    ports:
+      - '5055:5555'
+    depends_on:
+      - redis_server
