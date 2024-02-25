@@ -22,11 +22,11 @@ docker compose -f docker-compose.yml up -d --build
 
 ```
 docker run \
-    -v /path/to/root:/srv \
-    -v /path/to/filebrowser.db:/database/filebrowser.db \
-    -v /path/to/settings.json:/config/settings.json \
+    -v /root/FastApi_Celery_Redis_Flower_DrissionPage_Docker/result:/srv \
+    -v /root/filebrowser/filebrowser.db:/database/filebrowser.db \
+    -v /root/filebrowser/settings.json:/config/settings.json \
     -e PUID=$(id -u) \
     -e PGID=$(id -g) \
-    -p 8080:80 \
+    -p 5060:80 \
     filebrowser/filebrowser:s6
 ```
