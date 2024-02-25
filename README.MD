@@ -18,15 +18,32 @@ celery -A tasks flower --port=5555
 
 docker compose -f docker-compose.yml up -d --build
 
-#### FileBrowser
+#### FileBrowser Install
 
 ```
-docker run \
-    -v /root/FastApi_Celery_Redis_Flower_DrissionPage_Docker/result:/srv \
-    -v /root/filebrowser/filebrowser.db:/database/filebrowser.db \
-    -v /root/filebrowser/settings.json:/config/settings.json \
-    -e PUID=$(id -u) \
-    -e PGID=$(id -g) \
-    -p 5060:80 \
-    filebrowser/filebrowser:s6
+curl -fsSL https://raw.githubusercontent.com/filebrowser/get/master/get.sh | bash
+```
+
+#### Run FileBrowser
+
+```
+vim /etc/systemd/system/filebrowser.service
+```
+
+```
+[Unit]
+Description=FileBrowser
+After=network.target
+
+[Service]
+ExecStart=filebrowser -r /root/FastApi_Celery_Redis_Flower_DrissionPage_Docker/result -a 0.0.0.0
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+```
+systemctl start filebrowser
+systemctl status filebrowser
 ```
