@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 class Combo(BaseModel):
     email: str
     password: str
-    source: str
+    HasExchange: str
 
 
 app = FastAPI()
@@ -30,10 +30,14 @@ def home():
 
 @app.post("/send_combos")
 async def send_combos(combo: Combo):
-    logger.info(f"starting o365 check task: {combo.email}:{combo.password}")
-    task_name = "o365.task"
-    task = celery_app.send_task(task_name, args=[combo.email, combo.password])
-    return JSONResponse({"task_id": task.id})
+    if combo.HasExchange == "true":
+        logger.info(f"HasExchange: {combo.email}:{combo.password}")
+        task_name = "o365.task"
+        task = celery_app.send_task(task_name, args=[combo.email, combo.password])
+        return JSONResponse({"task_id": task.id})
+    else:
+        logger.info(f"DoNotHasExchange: {combo.email}:{combo.password}")
+    return JSONResponse({"task_id": "DoNotHasExchange"})
 
 
 @app.get("/status/{task_id}")
