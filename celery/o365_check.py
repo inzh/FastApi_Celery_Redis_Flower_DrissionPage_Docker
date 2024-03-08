@@ -34,10 +34,10 @@ def login_check(email, passwd):
         # 如果需要点击组织还是个人账户，则点击
         if page.ele("#aadTile", timeout=5):
             double_click_btn = page.ele("#aadTile", timeout=5)
-            double_click_btn.click(by_js=True, timeout=1)
+            double_click_btn.click(by_js=True, timeout=2)
         if page.ele("#aadTile", timeout=5):
             double_click_btn = page.ele("#aadTile", timeout=5)
-            double_click_btn.click(by_js=True, timeout=1)
+            double_click_btn.click(by_js=True, timeout=2)
         time.sleep(1)
         # 获取输入密码input，然后输入密码
         passwd_input = page.ele("@type=password")
@@ -45,17 +45,9 @@ def login_check(email, passwd):
         time.sleep(1)
         # 如果页面存在 不再显示此消息，则表示登录成功
         if page.ele("@name=DontShowAgain", timeout=5):
-            # 获取是否保持登录中的否按钮，然后点击
-            not_btn = page.ele("#idBtn_Back")
-            not_btn.click()
-            # 如果不存在邮箱授权，则会报 Something went wrong 错误
-            if page.ele("Something went wrong", timeout=10):
-                page.quit()
-                return False
-            else:
-                page.quit()
-                write_to_txt(f"{email}:{passwd}" + os.linesep)
-                return True
+            page.quit()
+            write_to_txt(f"{email}:{passwd}" + os.linesep)
+            return True
         else:
             # 不存在 不再显示此消息
             # 可能是直接进入邮箱了，也可能密码错误等其它情况
