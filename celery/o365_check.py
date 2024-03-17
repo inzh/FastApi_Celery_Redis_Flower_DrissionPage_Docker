@@ -32,11 +32,11 @@ def login_check(email, passwd):
         login_input.input(f"{email}\n")
         time.sleep(1)
         # 如果需要点击组织还是个人账户，则点击
-        if page.ele("#aadTile", timeout=5):
-            double_click_btn = page.ele("#aadTile", timeout=5)
+        if page.ele("#aadTile", timeout=7):
+            double_click_btn = page.ele("#aadTile", timeout=7)
             double_click_btn.click(by_js=True, timeout=2)
-        if page.ele("#aadTile", timeout=5):
-            double_click_btn = page.ele("#aadTile", timeout=5)
+        if page.ele("#aadTile", timeout=7):
+            double_click_btn = page.ele("#aadTile", timeout=7)
             double_click_btn.click(by_js=True, timeout=2)
         time.sleep(1)
         # 获取输入密码input，然后输入密码
@@ -44,7 +44,7 @@ def login_check(email, passwd):
         passwd_input.input(f"{passwd}\n")
         time.sleep(1)
         # 如果页面存在 不再显示此消息，则表示登录成功
-        if page.ele("@name=DontShowAgain", timeout=5):
+        if page.ele("@name=DontShowAgain", timeout=7):
             page.quit()
             write_to_txt(f"{email}:{passwd}" + os.linesep)
             return True
