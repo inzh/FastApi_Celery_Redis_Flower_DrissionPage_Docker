@@ -57,6 +57,8 @@ def login_check(email, passwd):
                 return True
             else:
                 page.quit()
+                with open("result/Login Failed.txt", "a+", encoding="UTF-8") as writers:
+                    writers.write(f"{email}:{passwd}" + os.linesep)
                 return False
     except Exception as e:
         if page is not None:
