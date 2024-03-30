@@ -5,7 +5,7 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from worker import celery_app
-from celery.result import AsyncResult
+
 
 if not os.path.exists('logs'):
     os.makedirs('logs')
