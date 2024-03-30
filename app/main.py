@@ -34,7 +34,3 @@ async def send_combos(combo: Combo):
     task_name = "o365.task"
     task = celery_app.send_task(task_name, args=[combo.email, combo.password])
     return JSONResponse({"task_id": task.id})
-
-        return {"status": "pending"}
-    else:
-        return {"status": "failed"}
