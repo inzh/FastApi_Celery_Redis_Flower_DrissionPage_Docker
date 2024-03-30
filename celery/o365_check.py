@@ -32,10 +32,10 @@ def login_check(email, passwd):
         login_input.input(f"{email}\n")
         time.sleep(1)
         # 如果需要点击组织还是个人账户，则点击
-        if page.ele("#aadTile", timeout=7):
+        if page.ele("#aadTile", timeout=3):
             double_click_btn = page.ele("#aadTile", timeout=7)
             double_click_btn.click(by_js=True, timeout=2)
-        if page.ele("#aadTile", timeout=7):
+        if page.ele("#aadTile", timeout=3):
             double_click_btn = page.ele("#aadTile", timeout=7)
             double_click_btn.click(by_js=True, timeout=2)
         time.sleep(1)
@@ -45,20 +45,26 @@ def login_check(email, passwd):
         time.sleep(1)
         # 如果页面存在 不再显示此消息，则表示登录成功
         if page.ele("@name=DontShowAgain", timeout=7):
-            page.quit()
-            write_to_txt(f"{email}:{passwd}" + os.linesep)
-            return True
+            # 获取是否保持登录中的否按钮，然后点击
+            not_btn = page.ele("#idBtn_Back")
+            not_btn.click()
+            # 如果不存在邮箱授权，则会报 Something went wrong 错误
+            if page.ele("Something went wrong", timeout=5):
+                page.quit()
+                return False
+            else:
+                page.quit()
+                write_to_txt(f"{email}:{passwd}" + os.linesep)
+                return True
         else:
             # 不存在 不再显示此消息
             # 可能是直接进入邮箱了，也可能密码错误等其它情况
-            if page.url == "https://outlook.office365.com/mail/":
+            if page.wait.url_change('https://outlook.office365.com/mail/'):
                 page.quit()
                 write_to_txt(f"{email}:{passwd}" + os.linesep)
                 return True
             else:
                 page.quit()
-                with open("result/Login Failed.txt", "a+", encoding="UTF-8") as writers:
-                    writers.write(f"{email}:{passwd}" + os.linesep)
                 return False
     except Exception as e:
         if page is not None:
