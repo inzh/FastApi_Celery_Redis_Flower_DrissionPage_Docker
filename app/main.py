@@ -6,6 +6,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from worker import celery_app
 from db import Base, engine
+from sqlalchemy import inspect
 
 if not os.path.exists('logs'):
     os.makedirs('logs')
@@ -13,7 +14,10 @@ if not os.path.exists('logs'):
 logging.basicConfig(filename='logs/app.log', level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
 
-Base.metadata.create_all(bind=engine)
+
+inspector = inspect(engine)
+if not inspector.has_table("login_valid"):
+    Base.metadata.create_all(bind=engine)
 
 
 class Combo(BaseModel):
