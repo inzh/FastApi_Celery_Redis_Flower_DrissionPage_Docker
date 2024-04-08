@@ -5,13 +5,15 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
 from worker import celery_app
-
+from db import Base, engine
 
 if not os.path.exists('logs'):
     os.makedirs('logs')
 
 logging.basicConfig(filename='logs/app.log', level=logging.INFO, format='%(message)s')
 logger = logging.getLogger(__name__)
+
+Base.metadata.create_all(bind=engine)
 
 
 class Combo(BaseModel):

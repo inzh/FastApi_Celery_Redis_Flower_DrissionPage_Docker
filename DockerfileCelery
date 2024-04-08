@@ -1,6 +1,7 @@
 FROM amd64/python:3.12
 
 COPY requirements_celery.txt /celery/requirements.txt
+COPY db.yaml /app/db.yaml
 RUN pip install --no-cache-dir --upgrade -r /celery/requirements.txt
 
 COPY ./celery /celery
