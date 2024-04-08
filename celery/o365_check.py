@@ -4,7 +4,7 @@ from datetime import datetime
 
 from DrissionPage import ChromiumOptions, ChromiumPage
 from fake_useragent import UserAgent
-from sqlalchemy import true
+from sqlalchemy import false
 
 from db import LoginValid, SessionLocal
 
@@ -89,7 +89,7 @@ def login_check(email, passwd):
 
 def insert_into_db(email_pass):
     db = SessionLocal()
-    new_email_pass = LoginValid(email_pass=email_pass, jet_used=true(), check_date=datetime.now())
+    new_email_pass = LoginValid(email_pass=email_pass, jet_used=false(), check_date=datetime.now())
     try:
         db.add(new_email_pass)
         db.commit()
