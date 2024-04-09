@@ -1,5 +1,6 @@
 import os
 import time
+import pytz
 from datetime import datetime
 
 from DrissionPage import ChromiumOptions, ChromiumPage
@@ -89,7 +90,8 @@ def login_check(email, passwd):
 
 def insert_into_db(email_pass):
     db = SessionLocal()
-    new_email_pass = LoginValid(email_pass=email_pass, jet_used=false(), check_date=datetime.now())
+    beijing_tz = pytz.timezone('Asia/Shanghai')
+    new_email_pass = LoginValid(email_pass=email_pass, jet_used=false(), check_date=datetime.now(beijing_tz))
     try:
         db.add(new_email_pass)
         db.commit()
