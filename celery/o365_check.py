@@ -60,21 +60,13 @@ def login_check(email, passwd):
                 # 获取输入密码input，然后输入密码
                 passwd_input = page.ele("@type=password")
                 passwd_input.input(f"{passwd}\n")
-            time.sleep(10)
+            time.sleep(15)
             # 如果页面存在 不再显示此消息，则表示登录成功
             if page.ele("@name=DontShowAgain", timeout=10):
                 # 获取是否保持登录中的否按钮，然后点击
-                not_btn = page.ele("#idBtn_Back")
-                not_btn.click()
-                time.sleep(10)
-                # 如果不存在邮箱授权，则会报 Something went wrong 错误
-                if page.ele("Something went wrong", timeout=8):
-                    page.quit()
-                    return False
-                else:
-                    page.quit()
-                    insert_into_db(email_pass)
-                    return True
+                page.quit()
+                insert_into_db(email_pass)
+                return True
             else:
                 # 不存在 不再显示此消息
                 # 可能是直接进入邮箱了，也可能密码错误等其它情况
